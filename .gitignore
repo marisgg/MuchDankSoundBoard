@@ -8,3 +8,5 @@
 /build
 /captures
 .externalNativeBuild
+/app/src/main/res/raw/output.txt
+/app/src/main/res/raw/script.py
