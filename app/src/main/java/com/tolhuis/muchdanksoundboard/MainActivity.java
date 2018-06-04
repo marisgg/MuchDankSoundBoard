@@ -27,7 +27,12 @@ public class MainActivity extends AppCompatActivity {
         buttonMap = new HashMap<>();
         mps = new ArrayList<>();
         String[] filenames = new String[]{
-                "s9_boom", "s9_scum_gang", "s9_i_let_my_nuts_hang", "s9_im_not_dumb"};
+                "ez_im_from_the_bay", "ez_in_the_flesh", "ez_kinda_get_chills", "ez_now_you_have_a_girlfriend", "ez_sniff", "ez_switzerland",
+                "ez_white_rappers", "ez_you_are_a_hater", "jo_breaking_street_protocol", "jo_fuckety_fuck", "jo_hey_akademiks", "jo_if_a_nigga_post_your_girl",
+                "jo_noooo", "jo_stop", "jo_stop_reporting", "jo_this_is_my_point", "jo_this_is_snitchin_number_one", "lo_also_not_fully_educated", "lo_and_also_biracial_people",
+                "lo_black_people", "lo_even_more_gangsta", "lo_fuck_you", "lo_im_biracial", "lo_im_not_white", "lo_i_support", "lo_me_black_and_white", "lo_wtf_is_that", "s9_boom",
+                "s9_im_not_dumb", "s9_i_let_my_nuts_hang", "s9_scum_gang", "ye_dont_call_me_fat", "ye_everyone_listen", "ye_im_in_the_hospital", "ye_im_not_drugged_out", "ye_i_took_seven",
+                "ye_i_was_drugged_out", "ye_i_went_from_2_to_7", "ye_obama_was_our_opioids", "ye_opioids", "ye_seven_seven"};
         LinearLayout linearLayout = findViewById(R.id.buttonlayout);
         String id = "";
         for(int i = 0; i < filenames.length; i++) {
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                     iv.setAdjustViewBounds(true);
                     iv.setImageResource(getResources().getIdentifier(id, "drawable", getPackageName()));
-                    if (!id.equals("s9")) {
+                    if (!id.equals("ez")) {
                         Button pad = new Button(this);
                         pad.setVisibility(View.INVISIBLE);
                         linearLayout.addView(pad);
