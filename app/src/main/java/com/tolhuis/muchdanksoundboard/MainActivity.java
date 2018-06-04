@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.buttonlayout);
         for(int i = 0, j = 0; i < linearLayout.getChildCount(); i++) {
             if(linearLayout.getChildAt(i) instanceof Button) {
-                //((Button) linearLayout.getChildAt(i)).setBackgroundColor(Color.GREEN);
                 buttonMap.put((Button) linearLayout.getChildAt(i), j);
                 mps.add(MediaPlayer.create(this, getResources().getIdentifier("s" + j, "raw", getPackageName())));
                 j++;
