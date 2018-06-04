@@ -2,7 +2,9 @@ package com.tolhuis.muchdanksoundboard;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +24,13 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Map<Button, Integer> buttonMap;
-    List<MediaPlayer> mps;
+    private List<MediaPlayer> mps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         buttonMap = new HashMap<>();
         mps = new ArrayList<>();
         String[] filenames = new String[]{
@@ -57,12 +61,31 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         playSound(v);
+                        //final int vId = v.getId();
+                        //findViewById(vId).setClickable(false);
+                        /*
+                        final Button lastButton = (Button) v;
+                        lastButton.setClickable(false);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //findViewById(vId).setClickable(true);
+                                lastButton.setClickable(true);
+                            }
+                        }, 1000);*/
                     }
                 });
                 b.setText(filenames[i].substring(3).replaceAll("_", " "));
                 buttonMap.put(b, i);
                 linearLayout.addView(b);
-                mps.add(MediaPlayer.create(this, getResources().getIdentifier(filenames[i], "raw", getPackageName())));
+                MediaPlayer mp = MediaPlayer.create(this, getResources().getIdentifier(filenames[i], "raw", getPackageName()));
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.release();
+                    }
+                });
+                mps.add(mp);
         }
 
     }
@@ -101,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
                 mp.seekTo(0);
             }
     }
+
+
 
 
 
