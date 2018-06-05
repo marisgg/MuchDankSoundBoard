@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,11 +97,17 @@ public class MainActivity extends AppCompatActivity {
                 if (item.isChecked()) {
                     item.setChecked(false);
                     soundsOverlapping = false;
+                    return true;
                 }
                 else {
                     item.setChecked(true);
                     soundsOverlapping = true;
+                    return true;
                 }
+//            case R.id.action_left_handed:
+//                if (item.isChecked()) {
+//                    (FloatingActionButton) findViewById(R.id.floatingActionButton).set
+//                }
             default:
                 return super.onOptionsItemSelected(item);
         }
