@@ -7,4 +7,11 @@
         android:orderInCategory="100"
         android:title="Reset"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_switch_sound_overlapping"
+        android:orderInCategory="0"
+        android:title="Sounds overlapping"
+        android:checkable="true"
+        android:checked="true"
+        />
 </menu>

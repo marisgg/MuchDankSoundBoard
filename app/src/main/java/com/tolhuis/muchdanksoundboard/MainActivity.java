@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,9 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Map<Button, Integer> buttonMap;
-    private List<MediaPlayer> mps;
+    protected MediaPlayer mp;
+    private String[] filenames;
+    private boolean soundsOverlapping = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         buttonMap = new HashMap<>();
-        mps = new ArrayList<>();
-        String[] filenames = new String[]{
+        filenames = new String[]{
                 "ez_im_from_the_bay", "ez_in_the_flesh", "ez_kinda_get_chills", "ez_now_you_have_a_girlfriend", "ez_sniff", "ez_switzerland",
                 "ez_white_rappers", "ez_you_are_a_hater", "jo_breaking_street_protocol", "jo_fuckety_fuck", "jo_hey_akademiks", "jo_if_a_nigga_post_your_girl",
                 "jo_noooo", "jo_stop", "jo_stop_reporting", "jo_this_is_my_point", "jo_this_is_snitchin_number_one", "lo_also_not_fully_educated", "lo_and_also_biracial_people",
@@ -61,32 +63,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         playSound(v);
-                        //final int vId = v.getId();
-                        //findViewById(vId).setClickable(false);
-                        /*
                         final Button lastButton = (Button) v;
                         lastButton.setClickable(false);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                //findViewById(vId).setClickable(true);
                                 lastButton.setClickable(true);
                             }
-                        }, 1000);*/
+                        }, 250);
                     }
                 });
                 b.setText(filenames[i].substring(3).replaceAll("_", " "));
                 buttonMap.put(b, i);
                 linearLayout.addView(b);
-                MediaPlayer mp = MediaPlayer.create(this, getResources().getIdentifier(filenames[i], "raw", getPackageName()));
-                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        mp.release();
-                    }
-                });
-                mps.add(mp);
-        }
+    }
 
     }
 
@@ -98,31 +88,56 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
-        if (item.getItemId() == R.id.action_reset) {
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_reset:
+                finish();
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            case R.id.action_switch_sound_overlapping:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    soundsOverlapping = false;
+                    return true;
+                }
+                else {
+                    item.setChecked(true);
+                    soundsOverlapping = true;
+                    return true;
+                }
+//            case R.id.action_left_handed:
+//                if (item.isChecked()) {
+//                    (FloatingActionButton) findViewById(R.id.floatingActionButton).set
+//                }
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void playSound(View v) {
-        for (MediaPlayer mp : mps)
-                if(mp.isPlaying()) {
-                    mp.pause();
-                    mp.seekTo(0);
+            if(!soundsOverlapping && mp != null)
+                stopSound(v);
+            mp = MediaPlayer.create(this, getResources().getIdentifier(filenames[buttonMap.get((Button) v)], "raw", getPackageName()));
+            mp.start();
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mepa) {
+                    mepa.release();
                 }
-        mps.get(buttonMap.get((Button)v)).start();
+            });
+    }
+
+    public void stopSound(View v) {
+        try {
+            mp.reset();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        for (MediaPlayer mp : mps)
-            if(mp.isPlaying()) {
-                mp.pause();
-                mp.seekTo(0);
-            }
+        stopSound(new View(this));
     }
 
 
