@@ -10,8 +10,26 @@
     <item
         android:id="@+id/action_switch_sound_overlapping"
         android:orderInCategory="0"
-        android:title="Sounds overlapping"
+        android:title="Sounds Overlapping"
         android:checkable="true"
         android:checked="true"
         />
+    <item
+        android:id="@+id/action_earrape24"
+        android:orderInCategory="1"
+        android:title="+24db"
+        android:checkable="true"
+        android:checked="false"/>
+    <item
+        android:id="@+id/action_earrape48"
+        android:orderInCategory="2"
+        android:title="+48db"
+        android:checkable="true"
+        android:checked="false"/>
+    <item
+        android:id="@+id/action_left_handed"
+        android:orderInCategory="3"
+        android:title="Left-Handed Mode"
+        android:checkable="true"
+        android:checked="false"/>
 </menu>

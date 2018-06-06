@@ -1,14 +1,13 @@
 package com.tolhuis.muchdanksoundboard;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     protected MediaPlayer mp;
     private String[] filenames;
     private boolean soundsOverlapping = true;
+    private boolean earrape24 = false;
+    private boolean earrape48 = false;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -98,27 +97,64 @@ public class MainActivity extends AppCompatActivity {
                     item.setChecked(false);
                     soundsOverlapping = false;
                     return true;
-                }
-                else {
+                } else {
                     item.setChecked(true);
                     soundsOverlapping = true;
                     return true;
                 }
-//            case R.id.action_left_handed:
-//                if (item.isChecked()) {
-//                    (FloatingActionButton) findViewById(R.id.floatingActionButton).set
-//                }
+            case R.id.action_left_handed:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+                    ConstraintLayout.LayoutParams lparams = (ConstraintLayout.LayoutParams) fab.getLayoutParams();
+                    lparams.horizontalBias = 0.972f;
+                    fab.setLayoutParams(lparams);
+                    return true;
+                } else {
+                    item.setChecked(true);
+                    FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+                    ConstraintLayout.LayoutParams lparams = (ConstraintLayout.LayoutParams) fab.getLayoutParams();
+                    lparams.horizontalBias = 0f;
+                    fab.setLayoutParams(lparams);
+                    return true;
+                }
+            case R.id.action_earrape24:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    earrape24 = false;
+                    return true;
+                } else {
+                    item.setChecked(true);
+                    menu.findItem(R.id.action_earrape48).setChecked(false);
+                    earrape24 = true;
+                    earrape48 = false;
+                    return true;
+                }
+            case R.id.action_earrape48:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    earrape48 = false;
+                    return true;
+                } else {
+                    item.setChecked(true);
+                    menu.findItem(R.id.action_earrape24).setChecked(false);
+                    earrape24 = false;
+                    earrape48 = true;
+                    return true;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     public void playSound(View v) {
-            if(!soundsOverlapping && mp != null)
-                stopSound(v);
-            mp = MediaPlayer.create(this, getResources().getIdentifier(filenames[buttonMap.get((Button) v)], "raw", getPackageName()));
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        if(!soundsOverlapping && mp != null)
+            stopSound(v);
+        mp = MediaPlayer.create(this, getResources().getIdentifier(
+                (earrape24 || earrape48 ? "earrape" + (earrape24 ? "24" : "48") + "_" : "") + filenames[buttonMap.get((Button) v)],
+                        "raw", getPackageName()));
+        mp.start();
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mepa) {
                     mepa.release();
@@ -129,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     public void stopSound(View v) {
         try {
             mp.reset();
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
